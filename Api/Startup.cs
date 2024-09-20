@@ -83,6 +83,15 @@ namespace minimal_api
                     ServerVersion.AutoDetect(Configuration.GetConnectionString("MySql"))
                 );
             });
+
+            services.AddCors(options => {
+                options.AddDefaultPolicy(
+                    builder => {
+                        builder.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,9 +99,11 @@ namespace minimal_api
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
             
+
 
             app.UseEndpoints(endpoints => {
             endpoints.MapGet("/", () => Results.Json(new Home())).AllowAnonymous().WithTags("Home");
